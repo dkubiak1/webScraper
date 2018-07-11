@@ -150,8 +150,8 @@ function showSaved() {
     //saveId = null;
     //$("#notes").val("");
     $('#articles').empty();
-    $('#save').hide();
-    $('#un-save').show();
+   // $('#save').hide();
+   // $('#un-save').show();
     getJSON(true);
     /*$.getJSON("/articles", function(data) {   
         for (var i = 0; i < data.length; i++) {
