@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/cnn");
+mongoose.connect("mongodb://localhost/bbcnews");
 
 app.get("/scrape", function (req, res) {
 
@@ -28,25 +28,25 @@ app.get("/scrape", function (req, res) {
     axios.get("https://www.bbc.com/news").then(function (response) {
 
         var $ = cheerio.load(response.data);
-        
+
         //<span class="cd__headline-text">Red-state Democratic senators refuse Trump's invite to White House Supreme Court announcement</span>
-       // $(".cd__headline-text").each(function (i, element) {
+        // $(".cd__headline-text").each(function (i, element) {
         $(".gs-c-promo-body").each(function (i, element) {
             var result = {};
             result.title = //"blah"
-            $(this)            
+                $(this)
                 .children('div')
                 .children('a')
                 .text();
-            result.body =   //"hi"
-            $(this)
+            result.body = //"hi"
+                $(this)
                 //.children("a")
                 .children('div')
                 .children('p')
                 .text();
             //console.log("result: "+JSON.stringify(result))    
-            result.link =   //"guys"
-            $(this)
+            result.link = //"guys"
+                $(this)
                 .children('div')
                 .children("a")
                 .attr("href");
@@ -59,15 +59,15 @@ app.get("/scrape", function (req, res) {
 
                     //return res.json(err);
                 });
-                console.log("result: "+JSON.stringify(result)) 
+            console.log("result: " + JSON.stringify(result))
         });
-        res.send("Scrape Complete "+response);
+        res.send("Scrape Complete " + response);
         //return res.json
     });
 });
 app.get("/articles", function (req, res) {
 
-    db.Article.find({})
+    db.Article.find({}).sort({createdAt: -1})
         .then(function (dbArticle) {
 
             res.json(dbArticle);
@@ -114,6 +114,66 @@ app.post("/articles/:id", function (req, res) {
 
             res.json(err);
         });
+
+});
+
+app.put("/articles/:id", function (req, res) {
+
+    db.Article.findOneAndUpdate({
+            _id: req.params.id
+        }, {
+            saved: req.body.saved
+        }, {
+            new: true
+        })
+        .then(function (dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+
+});
+
+app.delete("/articles/:id", function (req, res) {
+    const id = req.params.id
+  /*  db.Article.findOneAndUpdate(
+        //{ email: email },
+        { $pull: { note: req.params.id  } },
+        { new: true },
+        function(err, removedFromUser) {
+          if (err) { console.error(err) }
+          res.status(200).send(removedFromUser)
+        }) */
+
+    db.Note.findByIdAndRemove(
+            req.params.id, function(err, dbNote) {
+                if (err) {
+                    throw err;
+                }
+            
+       /* db.Article.remove({_id: { $in: req.params.note }}, (err, res) => {
+            
+        })*/
+     
+    } 
+        )
+        .exec(function(err, removed) {
+            db.Article.findOneAndUpdate(
+              { note: id },
+              { $unset: { note: id  } },
+              { new: true },
+              function(err, removedFromUser) {
+                if (err) { console.error(err) }
+                res.status(200).send(removedFromUser)
+              }) 
+        })        
+      /*  .then(function (dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });*/
 
 });
 

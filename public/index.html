@@ -4,33 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>BBC_News_WebScraper</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     
     
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-sm-10">
-                <div id="articles"></div>
-            </div>
-            <div class="col-sm-2" style="position: fixed; right: 0px;">
-                <button class="btn btn-primary btn-block" onclick="scrape()">Scrape</button>
-                <button class="btn btn-success btn-block" onclick="save(this)">Save</button>
-                <button class="btn btn-danger btn-block" onclick="note(this)">Add a Note</button>
-                <div id="note">
-                    <textarea id="notes" style="height:500px;"></textarea>
-                </div>
+            <div class="col-sm-8">
+                <button class="btn btn-primary btn-block" onclick="getAll()">All Articles</button> 
+                <button class="btn btn-success btn-block" onclick="showSaved()">Saved Articles</button> 
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div id="articles"></div>
+            </div>
+            <div class="col-sm-4" style="position: fixed; right: 0px;">
+                <button class="btn btn-default btn-block" onclick="scrape()">Scrape</button>
+                <button class="btn btn-default btn-block" id="save" onclick="save(true)">Save</button>
+                <button class="btn btn-warning btn-block" id="un-save" onclick="save(false)" style="display:none;">Remove Saved</button>
+                <button class="btn btn-danger btn-block" onclick="note()">Add a Note</button>
+                <div id="note">
+                    <textarea id="notes" style="height:400px;width:100%;" placeholder="Notes.."></textarea>
+                </div>
+                <button class="btn btn-warning btn-block" id="delete" style="display:none;" onclick="deleteNote()">Delete Note</button>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+            
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Error...</h4>
+                </div>
+                <div class="modal-body">
+                <p>Please Select an Article.</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+  
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>   
     <script src="app.js"></script>
 
 
 
-    </div>
+    
 </body>
 </html>
