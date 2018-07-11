@@ -134,6 +134,13 @@ function selectItem(e) {
         } else {
             $("#notes").val("");
         }
+        if (data.saved) {
+            $('#save').hide();
+            $('#un-save').show();
+        } else {
+            $('#save').show();
+            $('#un-save').hide();
+        }
     });     
 }
 
@@ -219,7 +226,7 @@ function getJSON(value) {
                     saveNote = null;
                     $("#notes").val("");
                 }    
-                console.log(allP[allP.length-1]);                
+                    console.log(allP[allP.length-1]);                
             }  
         }         
     });
