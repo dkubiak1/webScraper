@@ -20,7 +20,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-//mongoose.connect("mongodb://localhost/bbcnews");
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/bbcnews";
 
 mongoose.Promise = Promise;
@@ -28,28 +27,22 @@ mongoose.connect(MONGODB_URI);
 
 app.get("/scrape", function (req, res) {
 
-    //axios.get("http://www.cnn.com/politics").then(function (response) {
     axios.get("https://www.bbc.com/news").then(function (response) {
 
         var $ = cheerio.load(response.data);
-
-        //<span class="cd__headline-text">Red-state Democratic senators refuse Trump's invite to White House Supreme Court announcement</span>
-        // $(".cd__headline-text").each(function (i, element) {
         $(".gs-c-promo-body").each(function (i, element) {
             var result = {};
-            result.title = //"blah"
+            result.title =
                 $(this)
                 .children('div')
                 .children('a')
                 .text();
-            result.body = //"hi"
+            result.body =
                 $(this)
-                //.children("a")
                 .children('div')
                 .children('p')
                 .text();
-            //console.log("result: "+JSON.stringify(result))    
-            result.link = //"guys"
+            result.link =
                 $(this)
                 .children('div')
                 .children("a")
@@ -60,18 +53,19 @@ app.get("/scrape", function (req, res) {
                     console.log(dbArticle);
                 })
                 .catch(function (err) {
-
-                    //return res.json(err);
+                    console.log("dup");
                 });
             console.log("result: " + JSON.stringify(result))
         });
-        res.send("Scrape Complete " + response);
-        //return res.json
+        res.send("Scrape Complete");
+
     });
 });
 app.get("/articles", function (req, res) {
 
-    db.Article.find({}).sort({createdAt: -1})
+    db.Article.find({}).sort({
+            createdAt: -1
+        })
         .then(function (dbArticle) {
 
             res.json(dbArticle);
@@ -95,8 +89,6 @@ app.get("/articles/:id", function (req, res) {
 
             res.json(err);
         });
-
-
 });
 
 app.post("/articles/:id", function (req, res) {
@@ -118,7 +110,6 @@ app.post("/articles/:id", function (req, res) {
 
             res.json(err);
         });
-
 });
 
 app.put("/articles/:id", function (req, res) {
@@ -136,48 +127,37 @@ app.put("/articles/:id", function (req, res) {
         .catch(function (err) {
             res.json(err);
         });
-
 });
 
 app.delete("/articles/:id", function (req, res) {
-    const id = req.params.id
-  /*  db.Article.findOneAndUpdate(
-        //{ email: email },
-        { $pull: { note: req.params.id  } },
-        { new: true },
-        function(err, removedFromUser) {
-          if (err) { console.error(err) }
-          res.status(200).send(removedFromUser)
-        }) */
+    const id = req.params.id;
 
     db.Note.findByIdAndRemove(
-            req.params.id, function(err, dbNote) {
+            req.params.id,
+            function (err, dbNote) {
                 if (err) {
                     throw err;
                 }
-            
-       /* db.Article.remove({_id: { $in: req.params.note }}, (err, res) => {
-            
-        })*/
-     
-    } 
+
+            }
         )
-        .exec(function(err, removed) {
-            db.Article.findOneAndUpdate(
-              { note: id },
-              { $unset: { note: id  } },
-              { new: true },
-              function(err, removedFromUser) {
-                if (err) { console.error(err) }
-                res.status(200).send(removedFromUser)
-              }) 
-        })        
-      /*  .then(function (dbArticle) {
-            res.json(dbArticle);
+        .exec(function (err, removed) {
+            db.Article.findOneAndUpdate({
+                    note: id
+                }, {
+                    $unset: {
+                        note: id
+                    }
+                }, {
+                    new: true
+                },
+                function (err, removedFromUser) {
+                    if (err) {
+                        console.error(err)
+                    }
+                    res.status(200).send(removedFromUser)
+                })
         })
-        .catch(function (err) {
-            res.json(err);
-        });*/
 
 });
 
