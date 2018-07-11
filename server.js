@@ -20,7 +20,11 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/bbcnews");
+//mongoose.connect("mongodb://localhost/bbcnews");
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/bbcnews";
+
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
 
 app.get("/scrape", function (req, res) {
 
