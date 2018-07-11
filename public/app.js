@@ -225,7 +225,14 @@ function getJSON(value) {
                     saveId = null;
                     saveNote = null;
                     $("#notes").val("");
-                }    
+                }
+                if (data[i].saved) {
+                    $('#save').hide();
+                    $('#un-save').show();
+                } else {
+                    $('#save').show();
+                    $('#un-save').hide();
+                }   
                     console.log(allP[allP.length-1]);                
             }  
         }         
