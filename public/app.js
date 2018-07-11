@@ -213,7 +213,7 @@ function getJSON(value) {
             if (data[i]._id === saveId)  {
                 console.log("saved")              
                 const allP = document.querySelectorAll('.articles');
-                if (allP[allP.length-1]) {
+                if (allP[allP.length-1] && allP[allP.length-1].dataset.id === data[i]._id) {
                     allP[allP.length-1].style.background = "lightblue";
                     saveId = data[i]._id;
                     if (data[i].note) {
