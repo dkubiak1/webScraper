@@ -208,6 +208,12 @@ function getJSON(value) {
                 const allP = document.querySelectorAll('.articles');
                 if (allP[allP.length-1]) {
                     allP[allP.length-1].style.background = "lightblue";
+                    saveId = data[i]._id;
+                    if (data[i].note) {
+                        saveNote = data[i].note._id;
+                        $('#delete').show();
+                        //$("#notes").val(data[i].note.body);
+                    }
                 } else {
                     saveId = null;
                     saveNote = null;
